@@ -1,0 +1,117 @@
+﻿@model AddFormModel
+
+<div class="alert alert-success" id="successAlert" role="alert" style="display: none;">
+    <p>Item added successfully!</p>
+</div>
+<div class="alert alert-danger" id="errorAlert" role="alert" style="display: none;">
+    <p id="errorMessage"></p>
+</div>
+<form id="addStoreItemForm" class="container mt-4" method="post">
+
+    <div class="form-group mb-3">
+        <label asp-for="StoreId" class="form-label">Store</label>
+        <select id="StoreId" class="form-select" asp-for="StoreId" asp-items="@(new SelectList(Model.Store, "Id", "Name"))">
+            <option value="" disabled selected>- Select -</option>
+        </select>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="ItemId" class="form-label">Item</label>
+        <select id="ItemId" class="form-select" asp-for="ItemId" asp-items="@(new SelectList(Model.Items, "Id", "Name"))">
+            <option value="" disabled selected>- Select -</option>
+        </select>
+    </div>
+
+
+
+    <div class="form-group mb-3">
+      
+        <label for="CurrentQuantity" class="form-label">Current Quantity</label>
+        <input type="number" class="form-control" name="CurrentQuantity" id="CurrentQuantity" disabled />
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="Quantity" class="form-label">Quantity</label>
+        <input type="number" asp-for="Quantity" class="form-control" name="quantity" id="quantity" />
+    </div>
+
+    <div class="form-group">
+        <button type="submit" class="btn button-color">Add Item</button>
+    </div>
+</form>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            function updateCurrentQuantity(storeId, itemId) {
+                if (storeId && itemId) {
+                    $.ajax({
+                        url: '@Url.Action("GetQuantity", "AddQuantity")',
+                        type: 'GET',
+                        data: { storeId: storeId, itemId: itemId },
+                        success: function (response) {
+                            $('#CurrentQuantity').val(response.quantity);
+                        },
+                        error: function () {
+                            alert('There was a problem fetching the quantity. Please try again.');
+                        }
+                    });
+                }
+            }
+
+            function checkSelections() {
+                var itemId = $('#ItemId').val();
+                var storeId = $('#StoreId').val();
+                if (itemId && storeId) {
+                    $('#quantity').prop('disabled', false);
+                } else {
+                    $('#quantity').prop('disabled', true);
+                }
+            }
+
+            $('#ItemId, #StoreId').change(function () {
+                var itemId = $('#ItemId').val();
+                var storeId = $('#StoreId').val();
+                updateCurrentQuantity(storeId, itemId);
+                checkSelections();
+            });
+
+            $('#addStoreItemForm').submit(function (event) {
+                event.preventDefault();
+                var formData = $(this).serialize();
+
+                $.ajax({
+                    url: '@Url.Action("AddStoreItem", "AddQuantity")',
+                    type: 'POST',
+                    data: formData,
+                    success: function (response) {
+                        if (response.success) {
+                     
+                            $('#successAlert').show();
+                            setTimeout(() => {
+                                $('#successAlert').hide();
+                            }, 5000); 
+
+                            $('#quantity').val('');
+                            $('#errorAlert').hide(); 
+
+                            var itemId = $('#ItemId').val();
+                            var storeId = $('#StoreId').val();
+                            updateCurrentQuantity(storeId, itemId);
+                        } else {
+                         
+                            $('#errorMessage').text(response.error);
+                            $('#errorAlert').show();
+                        }
+                    },
+                    error: function () {
+                        $('#errorMessage').text('Failed to add item. Please try again.');
+                        $('#errorAlert').show();
+                    }
+                });
+            });
+
+            checkSelections();
+        });
+    </script>
+}

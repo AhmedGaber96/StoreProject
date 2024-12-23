@@ -1,0 +1,22 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-5 fw-bolder  mt-5 mb-5" style="color:#424197">Welcome To Store Project</h1>
+  <section>
+      <div class="container mt-5"> 
+          <div class="row ">
+                <div class="col-md-4  d-flex justify-content-center">
+                    <a  class="text-decoration-none fw-bolder fs-4 home-link" asp-controller="Store" asp-action="Index">Store</a>
+              </div>
+                <div class="col-md-4 d-flex justify-content-center">
+                    <a class="text-decoration-none fw-bolder fs-4 home-link" asp-controller="Item" asp-action="Index">Item</a>
+                </div>
+                <div class="col-md-4 d-flex  justify-content-center">
+                    <a class="text-decoration-none fw-bolder fs-4 home-link" asp-controller="AddQuantity" asp-action="Index">Add Quantitiy</a>
+                </div>
+          </div>
+      </div>
+  </section>
+</div>
