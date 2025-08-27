@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using StoreProject.BLL.Interface;
 using StoreProject.BLL.Repository;
 using StoreProject.DAL.Context;
-
 namespace StoreProject
 {
     public class Program

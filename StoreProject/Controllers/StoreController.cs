@@ -14,8 +14,16 @@ namespace StoreProject.Controllers
         }
         public IActionResult Index()
         {
-            var store  = _storeRepository.GetAll();
-            return View(store);
+            var store = _storeRepository.GetAll();
+            if(store is null)
+            {
+                return NotFound();
+            }
+
+            else
+            {
+                return View(store);
+            }
         }
         [HttpGet]
         public IActionResult Create()
