@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace StoreProject.BLL.Repository
 {
-//hello form the other side 
+//hello form the other side form github
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
         private readonly StoreProjectDbContext _dbContext;
